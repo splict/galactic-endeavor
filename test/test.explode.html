@@ -1,0 +1,124 @@
+
+<!doctype html>
+<html>
+<head>
+<title></title>
+
+<style>
+
+#foo {
+    width:50px;
+    height:50px;
+    position:relative;
+    margin:100px auto;
+    border-radius:50%;
+    background:#ccc;
+}
+#foo.boom {
+    background:none;
+}
+
+.particle {
+    width:10px;
+    height:10px;
+    background:#ccc;
+    border-radius:50%;
+    position:absolute;
+    opacity:1;
+    transition:opacity 500ms;
+}
+
+.particle.hide {
+    opacity:0;
+}
+
+</style>
+</head>
+<body>
+
+<div id="foo"></div>
+
+<script src="https://cdn.rawgit.com/web-animations/web-animations-js/2.0.0/web-animations.min.js"></script>
+<script src="../assets/js/props.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
+
+<script>
+
+document.querySelector('#foo').addEventListener('click', function () {
+    var _this = $(this),
+        particle = {},
+        rect = this.getBoundingClientRect(),
+        player = {},
+        xvel = 0,
+        yvel = 0,
+        spd = 200;
+
+    for (var i = 0; i < 20; i += 1) {
+        particle = document.createElement('div');
+        particle.className = 'particle';
+        $(this).append(particle).addClass('boom')
+
+        setTimeout(function() {
+            _this.find('.particle').addClass('hide');
+        }, 1000)
+
+        switch(Math.floor(Math.random() * 4)) {
+            case 0:
+                xvel -= Math.random() * spd;
+                yvel -= Math.random() * spd;
+                break;
+            case 1:
+                xvel = Math.random() * spd;
+                yvel -= Math.random() * spd;
+                break;
+            case 2:
+                xvel = Math.random() * spd;
+                yvel = Math.random() * spd;
+                break;
+            case 3:
+                xvel -= Math.random() * spd;
+                yvel = Math.random() * spd;
+                break;
+        }
+
+        var start = {
+                x: rect.width / 2,
+                y: rect.height / 2
+            },
+            end = {
+                x: xvel,
+                y: yvel
+            };
+
+        var steps = [
+            {transform: 'translate(' + start.x + 'px, ' + start.y + 'px)'},
+            {transform: 'translate(' + end.x + 'px, ' + end.y + 'px) scale(.1)'}
+        ];
+
+        var player = particle.animate(steps, {
+            duration: 2000,
+            //easing: 'cubic-bezier(.22,.67,.52,.92)',
+            fill: 'forwards',
+        });
+
+        player.addEventListener('finish', AnimationUtilApply(steps, particle));
+
+        player.onfinish = function () {
+            _this.remove();
+        };
+    }
+
+
+
+});
+
+function tick(timestamp) {
+
+    window.requestAnimationFrame(tick);
+}
+
+window.requestAnimationFrame(tick);
+
+</script>
+</body>
+</html>
