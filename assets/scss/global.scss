@@ -51,6 +51,41 @@ body {
                 height:100%;
             }
 
+            @mixin fadeScaleSet {
+                visibility:hidden;
+                opacity:0;
+                transform: scale(0);
+                transition:opacity 200ms, transform 500ms;
+            }
+
+            @mixin fadeScaleShow {
+                visibility:visible;
+                opacity:1;
+                transform: scale(1);
+            }
+
+            .outer {
+                border:1px solid rgba(255, 255, 0, 0.4);
+                border-radius:50%;
+                position:absolute;
+                z-index:-1;
+               @include fadeScaleSet;
+            }
+
+            .label {
+                font-family: 'Droid Sans', sans-serif;
+                display:block;
+                text-align:center;
+                font-size:12px;
+                font-weight:normal;
+                letter-spacing:.02em;
+                color:#aaa;
+                margin:2px 0 0;
+                text-transform:uppercase;
+                white-space:nowrap;
+                @include fadeScaleSet;
+            }
+
             #galaxy {
                 z-index:2;
                 font-size:0;
@@ -78,19 +113,15 @@ body {
                             display:block;
                             margin:auto;
                             background:#222;
-                            background: radial-gradient(circle at 43% 34%, #888, #111);
+                            //background: radial-gradient(circle at 43% 34%, #888, #111);
                             border:1px solid #222;
                             border-radius:50%;
 
                             .outer {
-                                border:1px solid rgba(255, 255, 255, 0.1);
-                                border-radius:50%;
-                                position:absolute;
                                 width:250%;
                                 height:250%;
                                 top:-75%;
                                 left:-75%;
-                                z-index:-1;
                             }
                         }
 
@@ -147,36 +178,6 @@ body {
                                 height:50px;
                             }
                         }
-                        &.warm {
-                            &:before {
-                                //background-color:green;
-                            }
-                        }
-                        &.cold {
-                            &:before {
-                                //background:silver;
-                            }
-                        }
-                        &.moderate {
-                            &:before {
-                                //background:green;
-                            }
-                        }
-                        &.ice {
-                            &:before {
-                                //background:lightblue;
-                            }
-                        }
-                        &.gas {
-                            &:before {
-                                //background:purple;
-                            }
-                        }
-                        &.hot {
-                            &:before {
-                                //background:red;
-                            }
-                        }
 
                         &.selected {
                             z-index:2;
@@ -185,10 +186,11 @@ body {
                                 border:1px solid #888;
                                 box-shadow:0 0 20px 4px rgba(255, 255, 255, 0.5);
                             }
-                            .label {
-                                visibility:visible;
+
+                            .label,
+                            .outer {
                                 color:#fff;
-                                //font-weight:bold;
+                                @include fadeScaleShow;
                             }
                         }
                     }
@@ -203,20 +205,6 @@ body {
                     stroke-linecap:round;
                     stroke-dasharray:8,8;
                 }
-            }
-
-            .label {
-                font-family: 'Droid Sans', sans-serif;
-                display:block;
-                visibility:hidden;
-                text-align:center;
-                font-size:12px;
-                font-weight:normal;
-                letter-spacing:.02em;
-                color:#aaa;
-                margin:2px 0 0;
-                text-transform:uppercase;
-                white-space:nowrap;
             }
 
             .ship-end-marker {
@@ -249,14 +237,10 @@ body {
                     }
 
                     .outer {
-                        border:1px solid rgba(255, 255, 255, 0.1);
-                        border-radius:50%;
-                        position:absolute;
                         width:700%;
                         height:700%;
                         top:-280%;
                         left:-300%;
-                        z-index:-1;
                     }
                 }
 
@@ -270,9 +254,10 @@ body {
                     // background:rgba(255, 255, 255, 0.15);
                     // border:1px solid rgba(255, 255, 255, 0.2);
 
-                    .label {
-                        visibility:visible;
+                    .label,
+                    .outer {
                         color:#fff;
+                        @include fadeScaleShow;
                     }
                 }
 

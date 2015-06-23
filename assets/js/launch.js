@@ -17,16 +17,14 @@
 
     window.iScrollObj = new window.IScroll('#wrap', {
         freeScroll: true,
-        zoom: true,
-        mouseWheel: true,
-        wheelAction: 'zoom',
-        zoomMax: 1,
-        zoomMin: 0.2,
+        //zoom: true,
+        //mouseWheel: true,
+        //wheelAction: 'zoom',
+        //zoomMax: 1,
+        //zoomMin: 0.2,
         //zoomStart: 4,
         scrollX: true
     });
-
-    $('#menu').html(window.Mustache.render($('#tmpl-menu').html(), {}));
 
     new ge.player({
         faction: 'user',

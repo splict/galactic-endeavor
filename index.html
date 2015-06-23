@@ -21,53 +21,13 @@
     </div>
     <div id="clock"></div>
 
-    <script id="tmpl-menu" type="text/html">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#">Main Menu</a></li>
-                        {{#planet}}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Planet <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Colonize</a></li>
-                                    <li><a href="#">Mine</a></li>
-                                    <li><a href="#">Siphon</a></li>
-                                    <li><a href="#">Terraform</a></li>
-                                </ul>
-                            </li>
-                        {{/planet}}
-
-                        {{#ship}}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Ship <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Scuttle</a></li>
-                                </ul>
-                            </li>
-                        {{/ship}}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </script>
-
     <script id="tmpl-system" type="text/html">
         <div class="system" id="{{id}}"></div>
     </script>
 
     <script id="tmpl-planet" type="text/html">
         <div id="{{id}}" class="planet {{size}} {{climate}}" style="left: {{x}}px; top: {{y}}px;">
-            <div class="orb">
+            <div class="orb" style="background:{{gradientStr}}">
                 <div class="outer"></div>
             </div>
             <div class="label">{{name}}</div>
@@ -87,11 +47,11 @@
     <script src="assets/js/timeline.js"></script>
     <script src="assets/js/props.js"></script>
     <script src="assets/js/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="assets/js/moment.js"></script>
     <script src="assets/js/mustache.min.js"></script>
     <script src="assets/js/iscroll-zoom.js"></script>
     <script src="assets/js/chance.min.js"></script>
+    <script src="assets/js/tinycolor.js"></script>
     <script src="assets/js/base.js"></script>
     <script src="assets/js/system.js"></script>
     <script src="assets/js/planet.js"></script>
