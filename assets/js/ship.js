@@ -32,6 +32,23 @@
         }
     };
 
+    ge.ship.prototype.remove = function () {
+        for (var i = 0; i < ge.ships.length; i += 1) {
+            if (ge.ships[i].id === this.id) {
+
+                ge.explode({
+                    selector: '#' + this.id,
+                    color: this.color,
+                    onStart: function () {
+                    },
+                    onFinish: function (el) {
+                        ge.ships.splice(i, 1);
+                    }
+                });
+            }
+        }
+    };
+
     $('body').on('touchstart touchmove touchend click', '.ship', function (ev) {
         if (ev.target.className === 'hull') {
             var s = document.querySelector('#' + $(this).attr('id'))
@@ -208,49 +225,69 @@
     }
     svgDraw();
 
+    var health = 0;
+
     function shipTick() {
         setTimeout(function() {
             window.requestAnimFrame(shipTick);
 
-            ge.battles = {};
+            ge.battles = [];
 
-            $('.ship').removeClass('fight').each(function () {
+            for (var k = 0; k < ge.ships.length; k += 1) {
+                if (ge.ships[k].health < 100) {
+                    health = ge.ships[k].health += 1;
+                    $('#' + ge.ships[k].id).find('.health div').css('width', health + '%');
+                }
+            }
+
+            $('.ship').removeClass('fight stack').each(function () {
                 var m = ge.matrixToArray($(this).css('-webkit-transform')),
                     x = parseFloat(m[4]) + ($(this).width() / 2),
                     y = parseFloat(m[5]) + ($(this).height() / 2),
                     s = ge.findShip(x, y);
 
                 for (var i = 0; i < ge.ships.length; i += 1) {
-                    if (ge.ships[i].id === $(this).attr('id')) {
+                    if (ge.ships[i].id === this.id) {
                         ge.ships[i].x = x;
                         ge.ships[i].y = y;
                     }
+
+                    if (ge.ships[i].x === x &&
+                        ge.ships[i].y === y &&
+                        ge.ships[i].id !== this.id) {
+
+                        $(this).addClass('stack');
+                    }
                 }
 
-                // TODO: stack/group?
-                // if (ge.ships[i].x >= x &&
-                //     ge.ships[i].x + w <= x + w &&
-                //     ge.ships[i].y >= y &&
-                //     ge.ships[i].y + h <= y + h &&
-                //     ge.ships[i].id !== $(this).attr('id')) {
+                if (s && s.id !== this.id &&
+                    s.faction !== ge.ship.objFromDOM(this).faction) {
 
-                // }
-
-                if (s && s.id !== $(this).attr('id') &&
-                    s.faction !== ge.ship.objFromDOM($(this)[0]).faction) {
-
-                    ge.battles[s.id] = $(this).attr('id');
-                }
-
-                if (Object.keys(ge.battles).length) {
-                    for (var prop in ge.battles) {
-                        if(ge.battles.hasOwnProperty(prop)) {
-                            $('#' + prop).addClass('fight');
-                            $('#' + ge.battles[prop]).addClass('fight');
-                        }
+                    if (ge.battles.indexOf(this.id) === -1) {
+                        ge.battles.push(this.id);
+                    }
+                    if (ge.battles.indexOf(s.id) === -1) {
+                        ge.battles.push(s.id);
                     }
                 }
             });
+
+            for (var j = 0; j < ge.battles.length; j += 1) {
+                $('#' + ge.battles[j]).addClass('fight');
+
+                for (var k = 0; k < ge.ships.length; k += 1) {
+                    if (ge.ships[k].id === ge.battles[j]) {
+                        health = ge.ships[k].health - chance.d20();
+
+                        if (health > 0) {
+                            ge.ships[k].health = health;
+                            $('#' + ge.ships[k].id).find('.health div').css('width', health + '%');
+                        } else {
+                            ge.ships[k].remove();
+                        }
+                    }
+                }
+            }
 
         }, 1000 / 2);
     }

@@ -15,10 +15,43 @@
         this.size = chance.pick(['small', 'medium', 'large', 'giant']);
         this.climate = chance.pick(['warm', 'cold', 'moderate', 'gas', 'ice', 'hot']);
         this.population = chance.integer({min: 0, max: 100000});
-        this.water = chance.integer({min: 0, max: 10000});
         this.minerals = chance.integer({min: 0, max: 10000});
         this.shipIds = [];
         this.colonized = false;
+
+        //TODO: based on climate
+        var hue = [];
+        switch(this.climate) {
+            case 'hot':
+                hue = chance.integer({min: 0, max: 40});
+                this.water = 0;
+                break;
+            case 'warm':
+                hue = chance.integer({min: 40, max: 60});
+                this.water = chance.integer({min: 0, max: 50});
+                break;
+            case 'moderate':
+                hue = chance.integer({min: 90, max: 150});
+                break;
+            case 'cold':
+                hue = chance.integer({min: 150, max: 240});
+                break;
+            case 'gas':
+                hue = chance.integer({min: 0, max: 330});
+                break;
+            case 'ice':
+                hue = chance.integer({min: 210, max: 250});
+                break;
+            default:
+                this.water = chance.integer({min: 0, max: 10000});
+        }
+
+        // generate color
+        var color2 = '#' + tinycolor('hsl(' + hue + ', 60%, 50%)').toHex();
+        var color1 = tinycolor(color2).lighten(20).toString();
+        var color3 = tinycolor(color2).darken(40).toString();
+
+        this.gradientStr = ' radial-gradient(circle at 43% 34%, ' + color1 + ', ' + color2 + ', ' + color3 + ')';
 
         ge.planets.push(this);
 
@@ -44,7 +77,7 @@
     ge.planet.prototype.colonize = function (args) {
         var el = document.createElement('div');
         el.className = 'colony';
-        el.className += ' colony-' + args.color;
+        el.style.color = args.color;
 
         $('.planet[id="' + this.id + '"] .orb').find('.colony').remove()
         $('.planet[id="' + this.id + '"] .orb').append(el);
@@ -95,7 +128,8 @@
             $(this).toggleClass(className).siblings().removeClass(className)
                 .parent().siblings().find('.' + className).removeClass(className);
 
-            $('#menu').html(window.Mustache.render($('#tmpl-menu').html(), menuObj));
+            //$(this).append(window.Mustache.render($('#tmpl-planet-menu').html(), this));
+
         }
     });
 
