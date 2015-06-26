@@ -4,6 +4,8 @@
     <title>Galactic Endeavor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet/scss" href="assets/scss/global.scss">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -35,11 +37,25 @@
     </script>
 
     <script id="tmpl-ship" type="text/html">
-        <div id="{{id}}" class="ship ship-{{color}}" style="top: 0px; left: 0px; transform: translate({{x}}px, {{y}}px);">
+        <div id="{{id}}" class="ship" style="top: 0px; left: 0px; transform: translate({{x}}px, {{y}}px);color:{{color}}">
             <div class="hull">
                 <div class="outer"></div>
             </div>
             <div class="label">{{name}}</div>
+            <div class="health">
+                <div style="width:{{health}}%"></div>
+            </div>
+        </div>
+    </script>
+
+    <script id="tmpl-planet-menu" type="text/html">
+        <div class="menu">
+            {{#colonized}}
+                <button>colonized</button>
+            {{/colonized}}
+            {{^colonized}}
+                <button>no colony</button>
+            {{/colonized}}
         </div>
     </script>
 

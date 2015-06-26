@@ -28,15 +28,15 @@
 
     new ge.player({
         faction: 'user',
-        color: 'green',
+        color: '#c3ff00',
         //ai: true,
         system: 1
     });
 
     new ge.player({
         faction: 'opfor',
-        color: 'red',
-        ai: true,
+        color: '#ff2a00',
+        //ai: true,
         difficulty: 1,
         system: 2
     });

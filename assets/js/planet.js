@@ -77,7 +77,7 @@
     ge.planet.prototype.colonize = function (args) {
         var el = document.createElement('div');
         el.className = 'colony';
-        el.className += ' colony-' + args.color;
+        el.style.color = args.color;
 
         $('.planet[id="' + this.id + '"] .orb').find('.colony').remove()
         $('.planet[id="' + this.id + '"] .orb').append(el);
@@ -127,6 +127,9 @@
 
             $(this).toggleClass(className).siblings().removeClass(className)
                 .parent().siblings().find('.' + className).removeClass(className);
+
+            //$(this).append(window.Mustache.render($('#tmpl-planet-menu').html(), this));
+
         }
     });
 
