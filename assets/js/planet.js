@@ -112,6 +112,7 @@
 
         if (!$(ev.target).hasClass(className) && !$(ev.target).parent().hasClass(className)) {
             $('.' + className).removeClass(className);
+            $('#dash').removeClass('open')
         }
     });
 
@@ -119,19 +120,44 @@
         var className = 'selected',
             menuObj = {
                 planet: true
-            };
+            },
+            menuTrigger = document.createElement('button');
+
+        menuTrigger.id = 'menu-trigger';
 
         if(ge.tapping(ev) || ev.type === 'click') {
-            var p = document.querySelector('#' + $(this).attr('id'))
-            console.log(ge.planet.objFromDOM(p))
+            var planetEl = document.querySelector('#' + $(this).attr('id')),
+                planetObj = ge.planet.objFromDOM(planetEl),
+                dashObj = {
+                    planet: planetObj
+                };
+
+            console.log(planetObj);
 
             $(this).toggleClass(className).siblings().removeClass(className)
                 .parent().siblings().find('.' + className).removeClass(className);
 
-            //$(this).append(window.Mustache.render($('#tmpl-planet-menu').html(), this));
-
+            $('#dash')
+                .html(window.Mustache.render($('#tmpl-dash').html(), dashObj))
+                .addClass('open');
         }
     });
+
+   // $('#board').on('touchstart touchmove touchend click', '.create-colony', function (ev) {
+   //      var p = ge.planet.objFromDOM($(ev.currentTarget).parents('.planet')[0]);
+   //      var s = ge.ship.objFromDOM(document.querySelector('#' + p.shipIds[0]));
+
+   //      if(ge.tapping(ev) || ev.type === 'click') {
+   //          console.log(p, s)
+   //          p.colonize({
+   //              faction: s.faction,
+   //              color: s.color,
+   //              callback: function (id) {
+   //                  p.colonized = true;
+   //              }
+   //          });
+   //      }
+   //  });
 
     ge.positionPlanets = function (target) {
         var offset = 100;

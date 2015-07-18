@@ -11,7 +11,7 @@
         this.faction = args.faction;
         this.color = args.color;
 
-        var t1 = document.querySelector('#galaxy .system:nth-child(' + args.system + ') .planet:first-child');
+        var t1 = document.querySelector('#galaxy .system:nth-child(' + args.system + ') .planet:nth-child(2)');
         var t2 = document.querySelector('#galaxy .system:nth-child(' + args.system + ') .planet:last-child');
         var offset = $('#board').offset();
 

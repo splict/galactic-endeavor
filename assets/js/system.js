@@ -13,6 +13,7 @@
                 chance.word({syllables: 3})
             ]));
 
+        this.name = name;
         this.id = 'system-' + chance.guid();
         this.planetIds = [];
 

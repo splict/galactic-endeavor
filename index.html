@@ -4,17 +4,19 @@
     <title>Galactic Endeavor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <link rel="stylesheet" href="assets/css/normalize.css">
-    <link rel="stylesheet" href="assets/css/animations.css">
-    <link rel="stylesheet/scss" href="assets/scss/global.scss">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+
+    <link rel="stylesheet/scss" href="assets/scss/global.scss">
+    <link rel="stylesheet/scss" href="assets/scss/dash.scss">
+
     <script src="assets/js/sass.min.js"></script>
     <script src="assets/js/sass.import.js"></script>
 </head>
 <body>
-    <div id="menu"></div>
     <div id="wrap">
         <div id="board">
             <div id="galaxy"></div>
@@ -22,9 +24,12 @@
         </div>
     </div>
     <div id="clock"></div>
+    <div id="dash"></div>
 
     <script id="tmpl-system" type="text/html">
-        <div class="system" id="{{id}}"></div>
+        <div class="system" id="{{id}}">
+            <h5>{{name}}</h5>
+        </div>
     </script>
 
     <script id="tmpl-planet" type="text/html">
@@ -48,15 +53,32 @@
         </div>
     </script>
 
-    <script id="tmpl-planet-menu" type="text/html">
-        <div class="menu">
+    <script id="tmpl-dash" type="text/html">
+        <button title="Details" class="info"></button>
+
+        {{#planet}}
             {{#colonized}}
-                <button>colonized</button>
+                <button title="Build Ship" class="build-ship"></button>
+                <button title="Mine" class="mine"></button>
+                <button title="Siphon" class="siphon"></button>
+                <button title="Terraform" class="terraform"></button>
+                <button title="Abandon" class="abandon"></button>
             {{/colonized}}
             {{^colonized}}
-                <button>no colony</button>
+                {{#shipIds.length}}
+                    <button title="Colonize" class="colonize"></button>
+                {{/shipIds.length}}
             {{/colonized}}
-        </div>
+        {{/planet}}
+
+        {{#ship}}
+            <button title="Repair Ship" class="repair-ship"></button>
+            <button title="Upgrade Ship" class="upgrade-ship"></button>
+            <button title="Abandon" class="abandon"></button>
+        {{/ship}}
+
+
+
     </script>
 
     <script src="assets/js/web-animations.min.js"></script>

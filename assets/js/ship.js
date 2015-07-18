@@ -51,12 +51,20 @@
 
     $('body').on('touchstart touchmove touchend click', '.ship', function (ev) {
         if (ev.target.className === 'hull') {
-            var s = document.querySelector('#' + $(this).attr('id'))
+            var shipEl = document.querySelector('#' + $(this).attr('id')),
+                shipObj = ge.ship.objFromDOM(shipEl),
+                dashObj = {
+                    ship: shipObj
+                };
+
+            console.log(shipObj);
 
             if(ge.tapping(ev) || ev.type === 'click') {
                 $(this).toggleClass('active');
 
-                console.log(ge.ship.objFromDOM(s));
+                $('#dash')
+                    .html(window.Mustache.render($('#tmpl-dash').html(), dashObj))
+                    .addClass('open');
             }
         }
     });
@@ -288,8 +296,7 @@
                     }
                 }
             }
-
-        }, 1000 / 2);
+        }, 1000 / 1);
     }
     shipTick();
 
