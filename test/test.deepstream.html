@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#dude {
+    width:40px;
+    height:40px;
+    background:green;
+    position:absolute;
+}
+
+</style>
+</head>
+<body>
+
+<div id="dude"></div>
+
+<script src="../assets/js/web-animations.min.js"></script>
+<script src="../assets/js/timeline.js"></script>
+<script src="../assets/js/props.js"></script>
+<script src="../assets/js/deepstream.min.js"></script>
+
+<script type="text/javascript">
+(function () {
+    'use strict';
+
+    var ds = deepstream( 'localhost:6020' ).login();
+    var record = ds.record.getRecord('user');
+    var player = {};
+    var dude = document.querySelector('#dude');
+    var rect = {};
+
+    var move = function (end) {
+        if (typeof rect.width === 'undefined') {
+            rect = dude.getBoundingClientRect();
+        }
+
+        var fromX = rect.left - rect.width / 5,
+            fromY = rect.top - rect.width / 5,
+            toX = end[0] - rect.width / 1.5,
+            toY = end[1] - rect.width / 1.5;
+
+        var steps = [
+            {transform: 'translate(' + fromX + 'px, ' + fromY + 'px)'},
+            {transform: 'translate(' + toX + 'px, ' + toY + 'px)'}
+        ];
+
+        if (player.cancel) {
+            player.cancel();
+        }
+
+        player = dude.animate(steps, {
+            duration: player.cancel ? 2000 : 0,
+            fill: 'forwards'
+        });
+    }
+
+    document.addEventListener('click', function (ev) {
+        record.set('position', [ev.pageX, ev.pageY]);
+    });
+
+    record.subscribe('position', function (value) {
+        move([value[0], value[1]]);
+    });
+
+    var tick = function () {
+        setTimeout(function() {
+            rect = dude.getBoundingClientRect();
+
+            window.requestAnimationFrame(tick);
+        }, 1000 / 30);
+    };
+    tick();
+}());
+</script>
+</body>
+</html>

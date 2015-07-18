@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.dude {
+    position:absolute;
+    width:40px;
+    height:40px;
+    background:green;
+}
+/*.dude:nth-child(2) {
+    transform: translate(100px, 100px);
+}*/
+
+</style>
+</head>
+<body>
+
+<script src="../assets/js/web-animations.min.js"></script>
+<script src="../assets/js/timeline.js"></script>
+<script src="../assets/js/props.js"></script>
+<script src="../assets/js/deepstream.min.js"></script>
+<script src="../assets/js/chance.min.js"></script>
+<script src="../assets/js/moment.js"></script>
+
+<script type="text/javascript">
+(function () {
+    'use strict';
+
+    var players = [];
+    var rects = [];
+
+    var ds = deepstream( 'localhost:6020' ).login();
+    var record = ds.record.getRecord('user');
+
+    record.subscribe('position', function (value) {
+        move([value[0], value[1]]);
+    });
+
+
+
+
+    // ds.event.subscribe('someEvent', function(data) {
+    //     var div = document.createElement('div');
+
+    //     div.className = 'dude';
+    //     div.id = data.unique;
+    //     document.body.appendChild(div);
+    // });
+
+    // ds.event.emit( 'someEvent', {
+    //     unique: chance.guid()
+    // });
+
+
+    var unique = chance.guid();
+
+    var sesPlayerLabel = 'player',
+        sesPlayerObj = {
+            active: true,
+            id: unique,
+            joined: moment().format('MMMM Do YYYY, h:mm:ss a')
+        },
+        dsPlayers = ds.record.getRecord('players');
+
+    if (sessionStorage.getItem(sesPlayerLabel)) {
+        sesPlayerObj.id = JSON.parse(sessionStorage.getItem(sesPlayerLabel)).id;
+    } else {
+        sessionStorage.setItem(sesPlayerLabel, JSON.stringify(sesPlayerObj));
+    }
+
+    //dsPlayers.set(sesPlayerObj.id, sesPlayerObj);
+
+    dsPlayers.whenReady(function() {
+        //console.log('whenReady', dsPlayers.get());
+
+
+
+    });
+    dsPlayers.subscribe(function (data) {
+        console.log('subscribe', data);
+
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+
+                if (data[key].active) {
+                    var div = document.createElement('div');
+
+                    div.className = 'dude';
+                    div.dataset.player = key;
+                    document.body.appendChild(div);
+                }
+            }
+        }
+    });
+
+    window.addEventListener('beforeunload', function () {
+        sesPlayerObj.active = false;
+        sesPlayerObj.left = moment().format('MMMM Do YYYY, h:mm:ss a');
+        dsPlayers.set(sesPlayerObj.id, sesPlayerObj);
+
+        var targets = document.querySelectorAll('.dude');
+
+        for (var i = 0; i < targets.length; i += 1) {
+            if (targets[i].dataset.id === sesPlayerObj.id) {
+                targets[i].outerHTML = '';
+            }
+        }
+    });
+
+
+
+    var move = function (end) {
+        var targets = document.querySelectorAll('.dude');
+
+        for (var i = 0; i < targets.length; i += 1) {
+            var rect = rects[i];
+
+            if (typeof rect === 'undefined') {
+                rect = targets[i].getBoundingClientRect();
+            }
+
+            var fromX = rect.left - rect.width / 5,
+                fromY = rect.top - rect.width / 5,
+                toX = end[0] - rect.width / 1.5,
+                toY = end[1] - rect.width / 1.5;
+
+            var steps = [
+                {transform: 'translate(' + fromX + 'px, ' + fromY + 'px)'},
+                {transform: 'translate(' + toX + 'px, ' + toY + 'px)'}
+            ];
+
+            if (typeof players[i] !== 'undefined') {
+                players[i].cancel();
+            }
+
+            players[i] = targets[i].animate(steps, {
+                duration: 2000,//typeof players[i] !== 'undefined' ? 2000 : 0,
+                fill: 'forwards'
+            });
+        }
+    }
+
+    var tick = function () {
+        setTimeout(function() {
+            var targets = document.querySelectorAll('.dude');
+
+            for (var i = 0; i < targets.length; i += 1) {
+                rects[i] = targets[i].getBoundingClientRect();
+            }
+
+            window.requestAnimationFrame(tick);
+        }, 1000 / 10);
+    };
+    tick();
+
+    // for (var i = 0; i < targets.length; i += 1) {
+    //     targets[i].addEventListener('click', function (ev) {
+    //         console.log(ev)
+    //     });
+    // }
+
+    document.addEventListener('click', function (ev) {
+        record.set('position', [ev.pageX, ev.pageY]);
+
+    });
+}());
+
+</script>
+</body>
+</html>

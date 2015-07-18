@@ -1,0 +1,68 @@
+#dash {
+    position:fixed;
+    z-index:5;
+    left:0;
+    right:0;
+    bottom:-71px;
+    height:70px;
+    padding:10px 0;
+    background:rgba(255, 255, 255, 0.1);
+    text-align:center;
+    transition:bottom 300ms;
+
+    &.open {
+        bottom:0;
+    }
+
+    button {
+        background:rgba(255, 255, 255, 0.3);
+        border:2px solid #fff;
+        width:50px;
+        height:50px;
+        border:none;
+        border-radius:2px;
+        margin:0 4px 0 0;
+        padding:0;
+        transition:background 300ms;
+
+        &:hover {
+            background:rgba(255, 255, 255, 0.4);
+        }
+
+        &:before {
+            color:#fff;
+            font-family: FontAwesome;
+            text-align:center;
+            font-size:23px;
+        }
+        &.info:before {
+            content: '\f129';
+        }
+        &.colonize:before {
+            content: '\f024';
+        }
+        &.abandon:before {
+            content: '\f00d';
+        }
+        &.mine:before {
+            content: '\f238';
+        }
+        &.siphon:before {
+            content: '\f21a';
+        }
+        &.terraform:before {
+            content: '\f1bb';
+        }
+        &.build-ship:before {
+            content: '\f135';
+        }
+        &.repair-ship:before {
+            content: '\f0ad';
+        }
+        &.upgrade-ship:before {
+            content: '\f148';
+        }
+    }
+
+
+}
