@@ -30,85 +30,100 @@
     var players = [];
     var rects = [];
 
-    var ds = deepstream( 'localhost:6020' ).login();
+    var ds = deepstream('localhost:6020').login();
     var record = ds.record.getRecord('user');
 
     record.subscribe('position', function (value) {
         move([value[0], value[1]]);
     });
 
-
-
-
-    // ds.event.subscribe('someEvent', function(data) {
-    //     var div = document.createElement('div');
-
-    //     div.className = 'dude';
-    //     div.id = data.unique;
-    //     document.body.appendChild(div);
-    // });
-
-    // ds.event.emit( 'someEvent', {
-    //     unique: chance.guid()
-    // });
-
-
     var unique = chance.guid();
 
-    var sesPlayerLabel = 'player',
-        sesPlayerObj = {
-            active: true,
-            id: unique,
-            joined: moment().format('MMMM Do YYYY, h:mm:ss a')
-        },
-        dsPlayers = ds.record.getRecord('players');
-
-    if (sessionStorage.getItem(sesPlayerLabel)) {
-        sesPlayerObj.id = JSON.parse(sessionStorage.getItem(sesPlayerLabel)).id;
-    } else {
-        sessionStorage.setItem(sesPlayerLabel, JSON.stringify(sesPlayerObj));
+    if (sessionStorage.getItem('p')) {
+        unique = JSON.parse(sessionStorage.getItem('p')).id
     }
 
-    //dsPlayers.set(sesPlayerObj.id, sesPlayerObj);
+    sessionStorage.setItem('p', JSON.stringify({
+        id: unique
+    }))
 
-    dsPlayers.whenReady(function() {
-        //console.log('whenReady', dsPlayers.get());
+// //subscribe to an event
+// ds.event.subscribe('someEvent', function(data) {
+//     var div = document.createElement('div');
 
+//     div.className = 'dude';
+//     div.dataset.player = data.id;
+//     document.body.appendChild(div);
+//     console.log('add ', data.id);
 
+// });
 
-    });
-    dsPlayers.subscribe(function (data) {
-        console.log('subscribe', data);
+// //emit an event
+// ds.event.emit('someEvent', {
+//     id: unique
+// });
 
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
+    var dsPlayers = ds.record.getRecord('players');
+    var arr = [];
 
-                if (data[key].active) {
-                    var div = document.createElement('div');
+    // dsPlayers.whenReady(function () {
+    //     console.log('whenReady', dsPlayers.get());
+    // });
+    dsPlayers.subscribe(function (obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key) && obj[key].active && arr.indexOf(key) === -1) {
+                var div = document.createElement('div');
 
-                    div.className = 'dude';
-                    div.dataset.player = key;
-                    document.body.appendChild(div);
+                arr.push(key)
+                div.dataset.player = key;
+                div.className = 'dude';
+
+                if (key === unique) {
+                    div.className += ' me';
                 }
+
+                div.addEventListener('click', function (ev) {
+                    this.className += ' active';
+                });
+                document.body.appendChild(div);
+                console.log('add ', key);
+
+
             }
         }
     });
 
-    window.addEventListener('beforeunload', function () {
-        sesPlayerObj.active = false;
-        sesPlayerObj.left = moment().format('MMMM Do YYYY, h:mm:ss a');
-        dsPlayers.set(sesPlayerObj.id, sesPlayerObj);
+    dsPlayers.set(unique, {
+        active: true,
+        id: unique,
+        enter: moment().format('MMMM Do YYYY, h:mm:ss a')
+    });
+
+    ds.event.subscribe('removePlayer', function(obj) {
+        console.log('removePlayer ' + obj.id)
+
+        dsPlayers.set(obj.id, {
+            active: false,
+            id: obj.id,
+            exit: moment().format('MMMM Do YYYY, h:mm:ss a')
+        });
 
         var targets = document.querySelectorAll('.dude');
 
         for (var i = 0; i < targets.length; i += 1) {
-            if (targets[i].dataset.id === sesPlayerObj.id) {
+            if (targets[i].dataset.player === obj.id) {
                 targets[i].outerHTML = '';
             }
         }
+        arr.splice(arr.indexOf(obj.id), 1);
+        console.log(arr)
     });
 
-
+    window.addEventListener('beforeunload', function () {
+        ds.event.emit('removePlayer', {
+            id: unique
+        });
+    });
 
     var move = function (end) {
         var targets = document.querySelectorAll('.dude');
@@ -154,15 +169,8 @@
     };
     tick();
 
-    // for (var i = 0; i < targets.length; i += 1) {
-    //     targets[i].addEventListener('click', function (ev) {
-    //         console.log(ev)
-    //     });
-    // }
-
     document.addEventListener('click', function (ev) {
         record.set('position', [ev.pageX, ev.pageY]);
-
     });
 }());
 
