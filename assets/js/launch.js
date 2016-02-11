@@ -23,6 +23,8 @@
         //zoomMax: 1,
         //zoomMin: 0.2,
         //zoomStart: 4,
+        resizePolling: 100,
+        deceleration: 0.001,
         scrollX: true
     });
 
