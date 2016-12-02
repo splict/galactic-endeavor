@@ -28,6 +28,8 @@
         scrollX: true
     });
 
+    ge.dash = new ge.dashboard;
+
     new ge.player({
         faction: 'user',
         color: '#c3ff00',
@@ -47,7 +49,7 @@
         setTimeout(function() {
             window.requestAnimFrame(tick);
 
-            document.querySelector('#clock').innerHTML = moment().format('MMMM Do YYYY, h:mm:ss a');
+            // document.querySelector('#clock').innerHTML = moment().format('MMMM Do YYYY, h:mm:ss a');
 
         }, 1000 / 1);
     }

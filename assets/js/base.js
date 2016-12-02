@@ -3,11 +3,13 @@
     'use strict';
 
     window.ge = {
+        dash: {},
         storeId: 'ge-store',
         activePlayer: {},
         systems: [],
         planets: [],
         ships: [],
+        selectedThing: {},
         players: [],
         localStorageSupported: function () {
             var str = 'test';

@@ -51,32 +51,28 @@
 
     $('body').on('touchstart touchmove touchend click', '.ship', function (ev) {
         if (ev.target.className === 'hull') {
-            var shipEl = document.querySelector('#' + $(this).attr('id')),
-                shipObj = ge.ship.objFromDOM(shipEl),
-                dashObj = {
-                    ship: shipObj
-                };
+            var shipEl = document.querySelector('#' + $(this).attr('id'))
 
-            console.log(shipObj);
-
-            if(ge.tapping(ev) || ev.type === 'click') {
+            if (ge.tapping(ev) || ev.type === 'click') {
                 $(this).toggleClass('active');
 
-                $('#dash')
-                    .html(window.Mustache.render($('#tmpl-dash').html(), dashObj))
-                    .addClass('open');
+                ge.dash.open(ge.ship.objFromDOM(shipEl));
             }
         }
     });
 
-    ge.ship.objFromDOM = function (el) {
+    ge.ship.objFromID = function (id) {
         var obj = {};
         for (var i = 0; i < ge.ships.length; i += 1) {
-            if (ge.ships[i].id === $(el).attr('id')) {
+            if (ge.ships[i].id === id) {
                 obj = ge.ships[i];
             }
         }
         return obj;
+    };
+
+    ge.ship.objFromDOM = function (el) {
+        return ge.ship.objFromID($(el).attr('id'));
     };
 
     ge.ship.move = function (args) {

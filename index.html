@@ -53,32 +53,41 @@
         </div>
     </script>
 
+    <script id="tmpl-info" type="text/html">
+        <div class="dash__row dash__name">Name: {{name}}</div>
+        <div class="dash__row">System: {{systemName}}</div>
+        <div class="dash__row">Population: {{population}}</div>
+        <div class="dash__row">Climate:
+            <span class="dash__climate" style="background:{{gradientStr}}"></span>
+            {{climate}}
+        </div>
+    </script>
+
     <script id="tmpl-dash" type="text/html">
-        <button title="Details" class="info"></button>
+        <div class="dash__row">
+            <button title="Details" class="info"></button>
 
-        {{#planet}}
-            {{#colonized}}
-                <button title="Build Ship" class="build-ship"></button>
-                <button title="Mine" class="mine"></button>
-                <button title="Siphon" class="siphon"></button>
-                <button title="Terraform" class="terraform"></button>
-                <button title="Abandon" class="abandon"></button>
-            {{/colonized}}
-            {{^colonized}}
-                {{#shipIds.length}}
-                    <button title="Colonize" class="colonize"></button>
-                {{/shipIds.length}}
-            {{/colonized}}
-        {{/planet}}
+            {{#isPlanet}}
+                {{#colonized}}
+                        <button title="Build Ship" class="build-ship"></button>
+                        <button title="Mine" class="mine"></button>
+                        <button title="Siphon" class="siphon"></button>
+                        <button title="Terraform" class="terraform"></button>
+                        <button title="Abandon" class="abandon"></button>
+                {{/colonized}}
+                {{^colonized}}
+                    {{#shipIds.length}}
+                        <button title="Colonize" class="colonize" id="dash-colonize"></button>
+                    {{/shipIds.length}}
+                {{/colonized}}
+            {{/isPlanet}}
+        </div>
 
-        {{#ship}}
+        {{#isShip}}
             <button title="Repair Ship" class="repair-ship"></button>
             <button title="Upgrade Ship" class="upgrade-ship"></button>
             <button title="Abandon" class="abandon"></button>
-        {{/ship}}
-
-
-
+        {{/isShip}}
     </script>
 
     <script src="assets/js/web-animations.min.js"></script>
@@ -91,6 +100,7 @@
     <script src="assets/js/chance.min.js"></script>
     <script src="assets/js/tinycolor.js"></script>
     <script src="assets/js/base.js"></script>
+    <script src="assets/js/dash.js"></script>
     <script src="assets/js/system.js"></script>
     <script src="assets/js/planet.js"></script>
     <script src="assets/js/ship.js"></script>

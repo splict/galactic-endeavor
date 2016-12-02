@@ -64,14 +64,18 @@
         $('#' + this.systemId).append(window.Mustache.render($('#tmpl-planet').html(), this));
     };
 
-    ge.planet.objFromDOM = function (el) {
+    ge.planet.objFromID = function (id) {
         var obj = {};
         for (var i = 0; i < ge.planets.length; i += 1) {
-            if (ge.planets[i].id === $(el).attr('id')) {
+            if (ge.planets[i].id === id) {
                 obj = ge.planets[i];
             }
         }
         return obj;
+    };
+
+    ge.planet.objFromDOM = function (el) {
+        return ge.planet.objFromID($(el).attr('id'));
     };
 
     ge.planet.prototype.colonize = function (args) {
@@ -107,12 +111,12 @@
         console.log('siphoning: ', this.water);
     };
 
-    $('#board').on('click', function (ev) {
+    $('#board').on('click touchend', function (ev) {
         var className = 'selected';
 
         if (!$(ev.target).hasClass(className) && !$(ev.target).parent().hasClass(className)) {
             $('.' + className).removeClass(className);
-            $('#dash').removeClass('open')
+            ge.dash.close();
         }
     });
 
@@ -126,38 +130,14 @@
         menuTrigger.id = 'menu-trigger';
 
         if(ge.tapping(ev) || ev.type === 'click') {
-            var planetEl = document.querySelector('#' + $(this).attr('id')),
-                planetObj = ge.planet.objFromDOM(planetEl),
-                dashObj = {
-                    planet: planetObj
-                };
-
-            console.log(planetObj);
+            var planetEl = document.querySelector('#' + $(this).attr('id'));
 
             $(this).toggleClass(className).siblings().removeClass(className)
                 .parent().siblings().find('.' + className).removeClass(className);
 
-            $('#dash')
-                .html(window.Mustache.render($('#tmpl-dash').html(), dashObj))
-                .addClass('open');
+            ge.dash.open(ge.planet.objFromDOM(planetEl));
         }
     });
-
-   // $('#board').on('touchstart touchmove touchend click', '.create-colony', function (ev) {
-   //      var p = ge.planet.objFromDOM($(ev.currentTarget).parents('.planet')[0]);
-   //      var s = ge.ship.objFromDOM(document.querySelector('#' + p.shipIds[0]));
-
-   //      if(ge.tapping(ev) || ev.type === 'click') {
-   //          console.log(p, s)
-   //          p.colonize({
-   //              faction: s.faction,
-   //              color: s.color,
-   //              callback: function (id) {
-   //                  p.colonized = true;
-   //              }
-   //          });
-   //      }
-   //  });
 
     ge.positionPlanets = function (target) {
         var offset = 100;
