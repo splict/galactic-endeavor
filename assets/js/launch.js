@@ -25,7 +25,11 @@
         //zoomStart: 4,
         resizePolling: 100,
         deceleration: 0.001,
-        scrollX: true
+        scrollX: true,
+        // https://github.com/cubiq/iscroll/issues/1100
+        disablePointer: true,
+        disableTouch: false,
+        disableMouse: false
     });
 
     ge.dash = new ge.dashboard;
