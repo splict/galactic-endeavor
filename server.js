@@ -239,33 +239,33 @@ StaticServlet.prototype.writeDirectoryIndex_ = function(req, res, path, files) {
   res.write('</ol>');
   res.end();
 };
-
-var DeepstreamServer = require( 'deepstream.io' ),
-    dserver = new DeepstreamServer();
-
-// Optionally you can specify some settings, a full list of which
-// can be found here http://deepstream.io/docs/deepstream.html
-dserver.set( 'host', 'localhost' );
-dserver.set( 'port', 6020 );
-
-// start the server
-dserver.start();
-
-dserver.set( 'permissionHandler', {
-    isValidUser: function( connectionData, authData, callback ) {
-        callback( null, authData.username || 'open' );
-    },
-
-    canPerformAction: function( username, message, callback ) {
-        callback( null, true );
-    },
-    onClientDisconnect: function( username ){} // this one is optional
-});
-
-
-
-
-
+//
+// var DeepstreamServer = require( 'deepstream.io' ),
+//     dserver = new DeepstreamServer();
+//
+// // Optionally you can specify some settings, a full list of which
+// // can be found here http://deepstream.io/docs/deepstream.html
+// dserver.set( 'host', 'localhost' );
+// dserver.set( 'port', 6020 );
+//
+// // start the server
+// dserver.start();
+//
+// dserver.set( 'permissionHandler', {
+//     isValidUser: function( connectionData, authData, callback ) {
+//         callback( null, authData.username || 'open' );
+//     },
+//
+//     canPerformAction: function( username, message, callback ) {
+//         callback( null, true );
+//     },
+//     onClientDisconnect: function( username ){} // this one is optional
+// });
+//
+//
+//
+//
+//
 
 
 
