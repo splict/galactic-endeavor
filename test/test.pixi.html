@@ -10,56 +10,88 @@
 </head>
 <body>
 
-<div id="foo"></div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.4.3/pixi.min.js"></script>
 
 <script>
-var app = new PIXI.Application();
+var app = new PIXI.Application()
+    
+renderSize = (w, h) => {
+    app.renderer.view.width = w + 'px'
+    app.renderer.view.height = h + 'px' 
+    app.renderer.resize(w,h)
+}
 
-document.body.appendChild(app.view);
+document.body.appendChild(app.view)
 
-// load the texture we need
-PIXI.loader.add('llama', '../assets/img/llama.png').load(function(loader, resources) {
-    let llama = new PIXI.Sprite(resources.llama.texture);
+PIXI.loader
+    .add('llama', '../assets/img/llama.png')
+    .load(function(loader, resources) {
+        renderSize(400, 400)
 
-    // llama.x = app.renderer.width / 2;
-    // llama.y = app.renderer.height / 2;
-    // llama.anchor.x += 0.5;
-    // llama.anchor.y = 0.5;
-    llama = {
-        width: 20,
-        height: 20,
-        interactive: true,
-        // click: function() {
-        //     console.log('llama', ev)
-        // },
-    };
+        let llama = new PIXI.Sprite(resources.llama.texture)
+        Object.assign(llama, {
+            anchor: {
+                x: 0.5,
+                y: 0.5,
+            },
+            x: 200,
+            y: 200,
+            width: 50,
+            height: 50,
+            interactive: true,
+            click: function(ev) {
+                console.log('llama', ev)
+            },
+        })
 
-    let container = new PIXI.Container();
-    container.x = 200;
-    container.y = 200;
-    container.interactive = true;
-    container.interactiveChildrenboolean = true;
-    container.addChild(llama);
+        let test = new PIXI.Container()
+        Object.assign(test, {
+            x: 0,
+            y: 0,
+            width: 200,
+            height: 200,
+            hitArea: new PIXI.Rectangle(0, 0, 200, 200),
+            interactive: true,
+            click: function(ev) {
+                console.log('test', ev)
+            },
+            zOrder: 2,
+            zIndex: 2,
+        })
+        test.addChild(llama)
+    
+        let test2 = new PIXI.Container();
+        (() => {
+            let x = 0
+            let y = 0
+            let w = app.renderer.view.width
+            let h = app.renderer.view.height
 
-    app.stage.on('click', (ev) => {
-       console.log('stage', ev)
-    });
+            Object.assign(test2, {
+                x,
+                y,
+                width: w,
+                height: h,
+                hitArea: new PIXI.Rectangle(x, y, w, h),
+                interactive: true,
+                click: function(ev) {
+                    console.log('root', ev)
+                    llama.x = ev.data.global.x
+                    llama.y = ev.data.global.y
+                },
+                zOrder: 1,
+                zIndex: 1,
+            })
+        })()
+    
+        test2.addChild(test)
+        app.stage.addChild(test2)
 
-    container.on('click', (ev) => {
-       console.log('container', ev)
-    });
 
-    app.stage.addChild(container);
-
-    console.log(llama.parent)
-
-    app.ticker.add(function() {
-        // llama.rotation += 0.01;
-        // llama.x += 1;
-    });
-});
+        app.ticker.add(function() {
+            llama.rotation += 0.01
+        })
+    })
 
 </script>
 </body>
