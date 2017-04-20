@@ -1,0 +1,66 @@
+
+<!doctype html>
+<html>
+<head>
+<title></title>
+
+<style>
+
+</style>
+</head>
+<body>
+
+<div id="foo"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.4.3/pixi.min.js"></script>
+
+<script>
+var app = new PIXI.Application();
+
+document.body.appendChild(app.view);
+
+// load the texture we need
+PIXI.loader.add('llama', '../assets/img/llama.png').load(function(loader, resources) {
+    let llama = new PIXI.Sprite(resources.llama.texture);
+
+    // llama.x = app.renderer.width / 2;
+    // llama.y = app.renderer.height / 2;
+    // llama.anchor.x += 0.5;
+    // llama.anchor.y = 0.5;
+    llama = {
+        width: 20,
+        height: 20,
+        interactive: true,
+        // click: function() {
+        //     console.log('llama', ev)
+        // },
+    };
+
+    let container = new PIXI.Container();
+    container.x = 200;
+    container.y = 200;
+    container.interactive = true;
+    container.interactiveChildrenboolean = true;
+    container.addChild(llama);
+
+    app.stage.on('click', (ev) => {
+       console.log('stage', ev)
+    });
+
+    container.on('click', (ev) => {
+       console.log('container', ev)
+    });
+
+    app.stage.addChild(container);
+
+    console.log(llama.parent)
+
+    app.ticker.add(function() {
+        // llama.rotation += 0.01;
+        // llama.x += 1;
+    });
+});
+
+</script>
+</body>
+</html>
