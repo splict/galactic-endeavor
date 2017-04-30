@@ -1,0 +1,25 @@
+{
+  "name": "galactic-endeavor",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:nblenke/galactic-endeavor.git",
+  "author": "Nathan Blenke",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "neutrino": "^5.7.0",
+    "neutrino-preset-web": "^5.7.0"
+  },
+  "scripts": {
+    "start": "neutrino start",
+    "build": "neutrino build",
+    "test": "neutrino test"
+  },
+  "neutrino": {
+    "options": {
+      "html": {}
+    },
+    "use": [
+      "neutrino-preset-web"
+    ]
+  }
+}
